@@ -49,7 +49,6 @@ public class FeedAdapter extends ArrayAdapter {
         new DownloadImageTask(viewHolder.feedIcon).execute(currentApp.getImageURL());
         viewHolder.tvName.setText(currentApp.getName());
         viewHolder.tvArtist.setText(currentApp.getArtist());
-        viewHolder.tvSummary.setText(currentApp.getSummary());
 
         return convertView;
     }
@@ -63,13 +62,11 @@ public class FeedAdapter extends ArrayAdapter {
         final ImageView feedIcon;
         final TextView tvName;
         final  TextView tvArtist;
-        final TextView tvSummary;
 
         ViewHolder(View v) {
             this.feedIcon = (ImageView) v.findViewById(R.id.feedIcon);
             this.tvName = (TextView) v.findViewById(R.id.tvName);
             this.tvArtist = (TextView) v.findViewById(R.id.tvArtist);
-            this.tvSummary = (TextView)  v.findViewById(R.id.tvSummary);
         }
     }
 
