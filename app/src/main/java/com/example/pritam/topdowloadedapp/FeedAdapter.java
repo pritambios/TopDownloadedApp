@@ -1,12 +1,19 @@
 package com.example.pritam.topdowloadedapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -39,6 +46,7 @@ public class FeedAdapter extends ArrayAdapter {
 
         FeedEntry currentApp = applications.get(position);
 
+        new DownloadImageTask(viewHolder.feedIcon).execute(currentApp.getImageURL());
         viewHolder.tvName.setText(currentApp.getName());
         viewHolder.tvArtist.setText(currentApp.getArtist());
         viewHolder.tvSummary.setText(currentApp.getSummary());
@@ -52,14 +60,45 @@ public class FeedAdapter extends ArrayAdapter {
     }
 
     private class ViewHolder {
+        final ImageView feedIcon;
         final TextView tvName;
         final  TextView tvArtist;
         final TextView tvSummary;
 
         ViewHolder(View v) {
+            this.feedIcon = (ImageView) v.findViewById(R.id.feedIcon);
             this.tvName = (TextView) v.findViewById(R.id.tvName);
             this.tvArtist = (TextView) v.findViewById(R.id.tvArtist);
             this.tvSummary = (TextView)  v.findViewById(R.id.tvSummary);
+        }
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bitmapImage;
+
+        public DownloadImageTask(ImageView feedIcon) {
+            this.bitmapImage = feedIcon;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            bitmapImage.setImageBitmap(bitmap);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            String urlDisplay = params[0];
+            Bitmap mIcon = null;
+
+            try {
+                InputStream in = new java.net.URL(urlDisplay).openStream();
+                mIcon = BitmapFactory.decodeStream(in);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return mIcon;
         }
     }
 }
